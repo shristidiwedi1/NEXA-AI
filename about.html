@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Team Nexa | About Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           1. CORE DESIGN TOKENS (APPLE AESTHETIC)
+           ========================================================================== */
+        :root {
+            --bg-deep: #000000;
+            --text-primary: #f5f5f7;
+            --text-muted: #86868b;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --font-ui: 'Inter', -apple-system, sans-serif;
+            --font-tech: 'Space Grotesk', monospace;
+            --easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+            
+            --blob-1: #00f0ff;
+            --blob-2: #8a2be2;
+            --blob-3: #ff2a5f;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            min-height: 100vh;
+            width: 100vw;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ==========================================================================
+           2. CINEMATIC ENTRANCE ANIMATION
+           ========================================================================== */
+        #intro-sequence {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-deep);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s var(--easing), transform 1.5s var(--easing);
+        }
+
+        .intro-logo {
+            font-family: var(--font-tech);
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 0.5em;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-muted);
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            animation: logoReveal 3s var(--easing) forwards;
+        }
+
+        .intro-logo::before {
+            content: "NEXA";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            color: var(--text-primary);
+            -webkit-text-stroke: 0px;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: logoFill 2s 1s var(--easing) forwards;
+        }
+
+        .intro-line {
+            width: 1px;
+            height: 0;
+            background: var(--text-primary);
+            margin-top: 30px;
+            animation: lineDraw 1.5s 2.5s var(--easing) forwards;
+        }
+
+        @keyframes logoReveal { to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes logoFill { to { width: 100%; } }
+        @keyframes lineDraw { to { height: 100px; opacity: 0; } }
+
+        .hide-intro {
+            opacity: 0 !important;
+            transform: scale(1.05) !important;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           3. THE APPLE FLUID ORB BACKGROUND
+           ========================================================================== */
+        .orb-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.6; /* Slightly dimmer for background */
+        }
+
+        .siri-orb {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #050505;
+            overflow: hidden;
+            -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 70%);
+            mask-image: radial-gradient(circle, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 70%);
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(60px);
+            border-radius: 50%;
+            opacity: 0.8;
+            mix-blend-mode: screen;
+        }
+
+        .blob-1 { width: 400px; height: 400px; background: var(--blob-1); top: -10%; left: -10%; transform-origin: 100% 50%; animation: orb-spin 12s linear infinite; }
+        .blob-2 { width: 450px; height: 450px; background: var(--blob-2); bottom: -20%; right: -10%; transform-origin: 0% 50%; animation: orb-spin 18s linear infinite reverse; }
+        .blob-3 { width: 350px; height: 350px; background: var(--blob-3); top: 30%; left: 30%; transform-origin: 50% 100%; animation: orb-spin 15s ease-in-out infinite alternate; }
+
+        @keyframes orb-spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        /* ==========================================================================
+           4. ABOUT US GLASSMORPHIC UI
+           ========================================================================== */
+        #main-interface {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 2s 0.5s var(--easing), transform 2s 0.5s var(--easing);
+        }
+
+        #main-interface.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass-panel {
+            background: rgba(18, 18, 22, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            width: 100%;
+            padding: 60px 40px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title {
+            font-family: var(--font-tech);
+            font-size: 2.5rem;
+            letter-spacing: 6px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff 0%, #86868b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 50px;
+            text-align: center;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .team-card {
+            background: var(--glass-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .team-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+
+        .team-card:hover::before {
+            opacity: 1;
+        }
+
+        .member-name {
+            font-family: var(--font-tech);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .team-card:hover .member-name {
+            color: var(--blob-1);
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        .back-btn {
+            margin-top: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 12px 30px;
+            border-radius: 30px;
+            color: var(--text-primary);
+            font-family: var(--font-tech);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive Grid */
+        @media (max-width: 900px) {
+            .team-grid { grid-template-columns: repeat(2, 1fr); }
+            .glass-panel { padding: 40px 20px; }
+            .page-title { font-size: 2rem; }
+        }
+        @media (max-width: 500px) {
+            .team-grid { grid-template-columns: 1fr; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Intro Animation -->
+    <div id="intro-sequence">
+        <div class="intro-logo">NEXA</div>
+        <div class="intro-line"></div>
+    </div>
+
+    <!-- Fluid Background Orb -->
+    <div class="orb-wrapper" id="orbWrapper">
+        <div class="siri-orb">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+    </div>
+
+    <!-- Main Glassmorphic UI -->
+    <div id="main-interface">
+        <div class="glass-panel">
+            <h1 class="page-title">TEAM NEXA</h1>
+            <p class="page-subtitle">The Visionaries Behind INDRA</p>
+            
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="member-name">MIHIR ANAND</div>
+                </div>
+                <div class="team-card">
+                    <div class="member-name">SHREYANSH</div>
+                </div>
+                <div class="team-card">
+                    <div class="member-name">ANKIT SINGH</div>
+                </div>
+                <div class="team-card">
+                    <div class="member-name">PRASHANT TIWARI</div>
+                </div>
+                <div class="team-card">
+                    <div class="member-name">ASHUTOSH TIWARI</div>
+                </div>
+                <div class="team-card">
+                    <div class="member-name">ANSHUMAN SINGH</div>
+                </div>
+                <div class="team-card">
+                    <div class="member-name">RAJNISH PANDEY</div>
+                </div>
+                <div class="team-card">
+                    <div class="member-name">ADARSH SINGH</div>
+                </div>
+            </div>
+
+            <!-- Modify href attribute to point back to your main INDRA index page -->
+            <a href="index.html" class="back-btn" onclick="javascript:history.back()">Return to Core</a>
+        </div>
+    </div>
+
+    <script>
+        // Trigger entrance animation timing
+        window.addEventListener('DOMContentLoaded', () => {
+            const intro = document.getElementById('intro-sequence');
+            const main = document.getElementById('main-interface');
+            
+            setTimeout(() => {
+                intro.classList.add('hide-intro');
+                main.classList.add('visible');
+            }, 3500);
+        });
+    </script>
+</body>
+</html>
