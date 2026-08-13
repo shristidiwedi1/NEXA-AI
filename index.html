@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>INDRA | Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           1. CORE DESIGN TOKENS
+           ========================================================================== */
+        :root {
+            --bg-deep: #000000;
+            --text-primary: #f5f5f7;
+            --text-muted: #86868b;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --font-ui: 'Inter', -apple-system, sans-serif;
+            --font-tech: 'Space Grotesk', monospace;
+            --easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+            
+            --blob-1: #00f0ff;
+            --blob-2: #8a2be2;
+            --blob-3: #ff2a5f;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-deep); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+
+        /* ==========================================================================
+           2. CINEMATIC ENTRANCE ANIMATION
+           ========================================================================== */
+        #intro-sequence {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-deep);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1.5s var(--easing), transform 1.5s var(--easing);
+        }
+
+        .intro-logo {
+            font-family: var(--font-tech);
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 0.5em;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--text-muted);
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            animation: logoReveal 3s var(--easing) forwards;
+        }
+
+        .intro-logo::before {
+            content: "INDRA";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            color: var(--text-primary);
+            -webkit-text-stroke: 0px;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: logoFill 2s 1s var(--easing) forwards;
+        }
+
+        .intro-line {
+            width: 1px;
+            height: 0;
+            background: var(--text-primary);
+            margin-top: 30px;
+            animation: lineDraw 1.5s 2.5s var(--easing) forwards;
+        }
+
+        @keyframes logoReveal { to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes logoFill { to { width: 100%; } }
+        @keyframes lineDraw { to { height: 100px; opacity: 0; } }
+
+        .hide-intro {
+            opacity: 0 !important;
+            transform: scale(1.05) !important;
+            pointer-events: none;
+        }
+
+        /* ==========================================================================
+           3. AMBIENT FLUID ORB BACKGROUND
+           ========================================================================== */
+        .ambient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.4; /* Dimmer for background */
+        }
+
+        .siri-orb {
+            position: relative;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: #050505;
+            overflow: hidden;
+            -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 60%);
+            mask-image: radial-gradient(circle, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 60%);
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            border-radius: 50%;
+            opacity: 0.7;
+            mix-blend-mode: screen;
+        }
+
+        .blob-1 { width: 500px; height: 500px; background: var(--blob-1); top: -10%; left: -10%; transform-origin: 100% 50%; animation: orb-spin 15s linear infinite; }
+        .blob-2 { width: 600px; height: 600px; background: var(--blob-2); bottom: -20%; right: -10%; transform-origin: 0% 50%; animation: orb-spin 20s linear infinite reverse; }
+        .blob-3 { width: 450px; height: 450px; background: var(--blob-3); top: 30%; left: 30%; transform-origin: 50% 100%; animation: orb-spin 18s ease-in-out infinite alternate; }
+
+        @keyframes orb-spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        /* ==========================================================================
+           4. MAIN CONTENT LAYOUT
+           ========================================================================== */
+        main {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 2s 0.5s var(--easing);
+            width: 100%;
+        }
+
+        main.visible { opacity: 1; }
+
+        /* HERO SECTION */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .badge {
+            font-family: var(--font-tech);
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #00f0ff;
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 30px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-family: var(--font-tech);
+            font-size: 5rem;
+            font-weight: 700;
+            letter-spacing: 8px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #86868b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 50px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            font-family: var(--font-tech);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 18px 40px;
+            border-radius: 40px;
+            transition: all 0.4s var(--easing);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: var(--text-primary);
+            color: var(--bg-deep);
+            border: 1px solid transparent;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-family: var(--font-tech);
+            letter-spacing: 2px;
+            opacity: 0.6;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+            40% { transform: translateY(-10px) translateX(-50%); }
+            60% { transform: translateY(-5px) translateX(-50%); }
+        }
+
+        /* ==========================================================================
+           5. FEEDBACK SECTION (GLASSMORPHIC FORM)
+           ========================================================================== */
+        .feedback-section {
+            width: 100%;
+            max-width: 800px;
+            padding: 100px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .glass-card {
+            background: rgba(18, 18, 22, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            width: 100%;
+            padding: 50px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-tech);
+            font-size: 2rem;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .feedback-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+
+        .glass-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px 24px;
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        textarea.glass-input {
+            resize: none;
+            height: 150px;
+        }
+
+        .glass-input::placeholder { color: rgba(255, 255, 255, 0.2); }
+
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            font-family: var(--font-tech);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background: rgba(0, 240, 255, 0.15);
+            border-color: rgba(0, 240, 255, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 40px;
+            background: rgba(52, 199, 89, 0.9);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s var(--easing);
+            pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(52, 199, 89, 0.3);
+            font-weight: 500;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 3.5rem; letter-spacing: 4px; }
+            .hero-subtitle { font-size: 1rem; padding: 0 15px; }
+            .action-buttons { flex-direction: column; width: 100%; max-width: 300px; }
+            .btn { width: 100%; }
+            .glass-card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cinematic Intro Sequence -->
+    <div id="intro-sequence">
+        <div class="intro-logo">INDRA</div>
+        <div class="intro-line"></div>
+    </div>
+
+    <!-- Ambient Fluid Orb Background -->
+    <div class="ambient-background">
+        <div class="siri-orb">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="badge">Nexa Project Core</div>
+            <h1 class="hero-title">INDRA</h1>
+            <p class="hero-subtitle">
+                An ultra-advanced AI cognitive core developed for the Science Exhibition. 
+                Experience seamless interaction, intuitive logic, and futuristic fluid intelligence.
+            </p>
+            
+            <div class="action-buttons">
+                <!-- Links to main AI interface -->
+                <a href="ai.html" class="btn btn-primary">Initialize Core</a>
+                <!-- Links to About Us page -->
+                <a href="about.html" class="btn btn-secondary">Meet Team Nexa</a>
+            </div>
+
+            <div class="scroll-indicator">
+                <span>System Feedback</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Feedback Section -->
+        <section class="feedback-section" id="feedback">
+            <div class="glass-card">
+                <div class="section-header">
+                    <h2>SYSTEM LOGS & FEEDBACK</h2>
+                    <p>Help us calibrate INDRA by submitting your observations.</p>
+                </div>
+
+                <form class="feedback-form" id="feedbackForm">
+                    <div class="input-group">
+                        <input type="text" class="glass-input" id="userName" placeholder="Your Name or Designation" required autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <input type="email" class="glass-input" id="userEmail" placeholder="Communication Link (Email)" required autocomplete="off">
+                    </div>
+                    <div class="input-group">
+                        <textarea class="glass-input" id="userMessage" placeholder="Initialize data transmission..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Transmit Data</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="successToast" class="toast">Data Transmitted Successfully.</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Intro Animation Timing
+            const intro = document.getElementById('intro-sequence');
+            const main = document.getElementById('main-content');
+            
+            setTimeout(() => {
+                intro.classList.add('hide-intro');
+                main.classList.add('visible');
+            }, 3500);
+
+            // 2. Feedback Form Handling (Visual Only)
+            const form = document.getElementById('feedbackForm');
+            const toast = document.getElementById('successToast');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); // Prevent page reload
+                
+                // Show Success Toast
+                toast.classList.add('show');
+                
+                // Clear inputs
+                form.reset();
+
+                // Hide Toast after 3 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>
